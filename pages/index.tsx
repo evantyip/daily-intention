@@ -43,7 +43,7 @@ const Home: NextPage = () => {
     number | undefined
   >(0);
   const [selectedDay, setSelectedDay] = useState<Day>();
-  const [userDays, setUserDays] = useState<Day[]>();
+  const [userDays, setUserDays] = useState<Day[]>([]);
 
   const createDay = async () => {
     const data: DayCreation = {
@@ -93,11 +93,11 @@ const Home: NextPage = () => {
 
   const compareLatestDay = () => {
     const currentDate = new Date();
-    if (userDays) {
+    if (userDays.length > 0) {
       const latestDate = new Date(userDays[0].date);
       return currentDate.getDate() > latestDate.getDate();
     }
-    return false;
+    return true;
   };
 
   const toggleCreate = (modal: string) => {
