@@ -48,7 +48,7 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
-  Post          Post[]
+  Day           Day[]
 }
 
 model VerificationToken {
@@ -59,19 +59,34 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-model Post {
-  id         String   @id @default(cuid())
-  user       User     @relation(fields: [userId], references: [id])
+model Day {
+  id         String       @id @default(cuid())
+  date       DateTime     @default(now())
+  user       User         @relation(fields: [userId], references: [id])
   userId     String
-  feeling    Feeling? @relation(fields: [feelingInt], references: [id])
-  feelingInt Int?
-  word       String
+  Intent     Intent[]
+  Reflection Reflection[]
+}
+
+model Intent {
+  id    String @id @default(cuid())
+  word  String
+  notes String
+  day   Day    @relation(fields: [dayId], references: [id])
+  dayId String
+}
+
+model Reflection {
+  id         String  @id @default(cuid())
+  feeling    Feeling @relation(fields: [feelingInt], references: [id])
+  feelingInt Int
   notes      String
-  createdAt  DateTime @default(now())
+  day        Day     @relation(fields: [dayId], references: [id])
+  dayId      String
 }
 
 model Feeling {
-  id      Int    @id @default(autoincrement())
+  id      Int          @id @default(autoincrement())
   feeling String
-  Post    Post[]
+  Post    Reflection[]
 }

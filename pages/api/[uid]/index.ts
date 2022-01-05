@@ -13,33 +13,6 @@ export default async function handler(
 ) {
   const session = await getSession({ req });
 
-  if (req.method == 'POST' && session) {
-    const { userId, word, notes }: DayCreation = req.body;
-    try {
-      const day = await prisma.day.create({
-        data: {
-          userId,
-          Intent: {
-            create: [
-              {
-                word,
-                notes,
-              },
-            ],
-          },
-        },
-        include: {
-          Intent: true,
-        },
-      });
-      console.log(day);
-      res.status(201).json({ day });
-    } catch (e) {
-      console.log(e);
-      res.json(e);
-      res.status(405).end();
-    }
-  }
   if (req.method == 'GET' && session) {
     console.log('GET REQUEST');
     try {
@@ -51,6 +24,11 @@ export default async function handler(
             },
             include: {
               Intent: true,
+              Reflection: {
+                include: {
+                  feeling: true,
+                },
+              },
             },
           },
         },
